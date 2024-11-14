@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import MainLayout from "./layouts/mainLayout.jsx";
+import MainLayout from "./layouts/MainLayout.jsx";
 import { Weather, Jokes } from "./components";
 
 const router = createBrowserRouter([
