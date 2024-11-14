@@ -54,8 +54,8 @@ function App() {
                 <h4>Filters</h4>
                 <button
                     style={{
-                        backgroundColor: filter === "All" ? "white" : "",
-                        color: filter === "All" ? "black" : "",
+                        backgroundColor: filter === "All" ? "white" : "#1a1a1a",
+                        color: filter === "All" ? "black" : "white",
                     }}
                     onClick={() => setFilter("All")}
                 >
@@ -63,8 +63,9 @@ function App() {
                 </button>
                 <button
                     style={{
-                        backgroundColor: filter === "Done" ? "white" : "",
-                        color: filter === "Done" ? "black" : "",
+                        backgroundColor:
+                            filter === "Done" ? "white" : "#1a1a1a",
+                        color: filter === "Done" ? "black" : "white",
                     }}
                     onClick={() => setFilter("Done")}
                 >
@@ -72,8 +73,9 @@ function App() {
                 </button>
                 <button
                     style={{
-                        backgroundColor: filter === "NotDone" ? "white" : "",
-                        color: filter === "NotDone" ? "black" : "",
+                        backgroundColor:
+                            filter === "NotDone" ? "white" : "#1a1a1a",
+                        color: filter === "NotDone" ? "black" : "white",
                     }}
                     onClick={() => setFilter("NotDone")}
                 >

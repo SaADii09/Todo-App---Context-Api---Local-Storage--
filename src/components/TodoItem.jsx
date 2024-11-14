@@ -50,7 +50,6 @@ const TodoItem = ({ todo }) => {
             <input
                 type="time"
                 style={{
-                    textDecoration: todo.isdone ? "line-through" : undefined,
                     color: todo.isdone ? "gray" : undefined,
                     border: isTodoEditable ? "1px solid white" : "none",
                 }}

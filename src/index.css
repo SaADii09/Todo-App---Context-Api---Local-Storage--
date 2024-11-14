@@ -55,19 +55,6 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        color: #213547;
-        background-color: #ffffff;
-    }
-    a:hover {
-        color: #747bff;
-    }
-    button {
-        background-color: #f9f9f9;
-    }
-}
-
 input {
     margin: 0 0.5em;
     border-radius: 8px;
@@ -77,6 +64,6 @@ input {
     font-weight: 500;
     font-family: inherit;
     background-color: #1a1a1a;
+    color: white;
     cursor: pointer;
-    /* transition: border-color 0.25s; */
 }
