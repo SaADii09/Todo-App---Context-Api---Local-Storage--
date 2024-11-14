@@ -34,7 +34,7 @@ const TodoItem = ({ todo }) => {
                 }}
                 value={todoMsg}
                 onChange={(e) => setTodoMsg(e.target.value)}
-                readOnly={!isTodoEditable}
+                readOnly={!isTodoEditable || todo.isdone}
             />
             <input
                 type="text"
@@ -45,7 +45,7 @@ const TodoItem = ({ todo }) => {
                 }}
                 value={todoDesc}
                 onChange={(e) => setTodoDesc(e.target.value)}
-                readOnly={!isTodoEditable}
+                readOnly={!isTodoEditable || todo.isdone}
             />
             <input
                 type="time"
@@ -56,10 +56,9 @@ const TodoItem = ({ todo }) => {
                 }}
                 value={todoStartTime}
                 onChange={(e) => setTodoStartTime(e.target.value)}
-                readOnly={!isTodoEditable}
+                readOnly={!isTodoEditable || todo.isdone}
             />
             <button
-                // className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0 disabled:opacity-50"
                 onClick={() => {
                     if (todo.completed) return;
 
@@ -71,13 +70,7 @@ const TodoItem = ({ todo }) => {
             >
                 {isTodoEditable ? "Save" : "Edit"}
             </button>
-            {/* Delete Todo Button */}
-            <button
-                // className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0"
-                onClick={() => deleteTodo(todo.id)}
-            >
-                Delete
-            </button>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
         </div>
     );
 };
