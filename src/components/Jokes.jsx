@@ -3,10 +3,12 @@ import { v4 as uuidv4 } from "uuid";
 
 const Jokes = () => {
     const [jokes, setJokes] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [currentJoke, setCurrentJoke] = useState({});
 
-    const getJokes = async () => {
+    const [loading, setLoading] = useState(true);
+    const [err, setErr] = useState(false);
+
+    const getJokes = () => {
         setLoading(true);
         fetch("https://api.api-ninjas.com/v1/jokes", {
             method: "GET",
@@ -14,9 +16,20 @@ const Jokes = () => {
                 "X-Api-Key": "HoGgaDM2OSwRfuFDZ3rl3g==nCIePvS5qGM19Gth",
             },
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    setErr(true);
+                }
+                return response.json();
+            })
             .then((data) => {
                 setCurrentJoke(data[0]);
+            })
+            .catch((error) => {
+                setErr(true);
+                console.error("Error fetching joke:", error);
+            })
+            .finally(() => {
                 setLoading(false);
             });
     };
@@ -37,32 +50,45 @@ const Jokes = () => {
         <>
             <h1>🤡Daily Jokes</h1>
             {loading ? (
-                <p>Wait, we are getting more funny jokes for you...</p>
+                <div className="jokeDiv">
+                    <p>Wait, we are getting more funny jokes for you...</p>
+                </div>
             ) : (
-                <div>
-                    <div className="jokeDiv">
-                        <p>{currentJoke.joke}</p>
-                    </div>
-                    <button onClick={getJokes}>New joke </button>
-                    <button
-                        onClick={() => {
-                            if (
-                                !jokes.find(
-                                    (findJoke) =>
-                                        findJoke.joke === currentJoke.joke
-                                )
-                            ) {
-                                setJokes([
-                                    ...jokes,
-                                    { joke: currentJoke.joke, id: uuidv4() },
-                                ]);
-                            }
-                        }}
-                    >
-                        Like😂
-                    </button>
+                !err && (
+                    <>
+                        <div className="jokeDiv">
+                            <p>{currentJoke.joke}</p>
+                        </div>
+                        <button onClick={getJokes}>New joke </button>
+                        <button
+                            onClick={() => {
+                                if (
+                                    !jokes.find(
+                                        (findJoke) =>
+                                            findJoke.joke === currentJoke.joke
+                                    )
+                                ) {
+                                    setJokes([
+                                        ...jokes,
+                                        {
+                                            joke: currentJoke.joke,
+                                            id: uuidv4(),
+                                        },
+                                    ]);
+                                }
+                            }}
+                        >
+                            Like😂
+                        </button>
+                    </>
+                )
+            )}
+            {err && (
+                <div className="jokeDiv">
+                    <p>Sorry, we are facing erorr! can't get joke for you...</p>
                 </div>
             )}
+
             <h3>Liked Jokes: {jokes.length}</h3>
             <div>
                 {jokes.length > 0 &&
