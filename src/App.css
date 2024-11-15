@@ -85,3 +85,27 @@
     align-items: center;
     gap: 20px;
 }
+
+.jokeDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 10px 8px;
+    margin: 8px 0;
+}
+
+.jokeListDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 10px 8px;
+    margin: 8px 0;
+}
+
+.deleteBtn {
+    background-color: #f84545;
+}
