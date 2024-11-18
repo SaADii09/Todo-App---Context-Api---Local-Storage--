@@ -57,7 +57,7 @@ const Weather = () => {
     const fetchForecastData = async () => {
         // if (!location.lat || !location.lon)
         //     return Promise.reject("Location not available");
-        returnfetch(
+        return fetch(
             `https://api.openweathermap.org/data/2.5/forecast?lat=${
                 location.lat
             }&lon=${location.lon}&appid=${
