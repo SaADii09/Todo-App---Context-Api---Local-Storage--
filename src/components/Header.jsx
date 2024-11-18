@@ -9,7 +9,6 @@ const Header = () => {
                 <NavLink to={"/weather"}>Weather</NavLink>
                 <NavLink to={"/jokes"}>Jokes</NavLink>
             </div>
-            <hr />
         </>
     );
 };
