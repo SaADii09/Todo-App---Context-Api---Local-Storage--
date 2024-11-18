@@ -9,29 +9,45 @@ const Weather = () => {
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(false);
 
-    const fetchLocation = () => {
-        setLoading(true);
-        fetch(
-            "https://ip-api.com/json/?fields=country,countryCode,city,zip,lat,lon,query"
-        )
+    const fetchIP = async () => {
+        return fetch(`https://api.ipify.org?format=json`)
             .then((response) => response.json())
-            .then((data) => {
-                setLocation({
-                    ip: data.query,
-                    country: data.country,
-                    countrycode: data.countryCode,
-                    city: data.city,
-                    zip: data.zip,
-                    lon: data.lon,
-                    lat: data.lat,
-                });
-                setLoading(false);
-                return data;
-            })
+            .then((data) => data.ip)
             .catch((error) => {
+                console.error("Error fetching IP:", error);
                 setErr(true);
-                console.error("Error fetching location:", error);
             });
+    };
+
+    const fetchLocation = async () => {
+        setLoading(true);
+
+        const ip = await fetchIP();
+
+        if (ip) {
+            const ipstackUrl = `https://api.ipstack.com/${ip}?access_key=${
+                import.meta.env.VITE_IPSTACK_ACCESS_KEY
+            }`;
+            return fetch(ipstackUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    setLocation({
+                        ip: data.ip,
+                        country: data.country_name,
+                        countryCode: data.country_code,
+                        city: data.city,
+                        lat: data.latitude,
+                        lon: data.longitude,
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching location:", error);
+                    setErr(true);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
     };
 
     const fetchCurrentWeather = async () => {
@@ -70,20 +86,9 @@ const Weather = () => {
             });
     };
 
-    // useEffect(() => {
-    //     setLoading(true);
-    //     fetchLocation()
-    //         .then(() => {
-    //             return Promise.all([
-    //                 fetchCurrentWeather(),
-    //                 fetchForecastData(),
-    //             ]);
-    //         })
-    //         .finally(() => {
-    //             setLoading(false);
-    //         });
-    // }, [location.lat, location.lon]);
-
+    useEffect(() => {
+        console.log(location);
+    }, [location]);
     useEffect(() => {
         fetchLocation();
     }, []);
