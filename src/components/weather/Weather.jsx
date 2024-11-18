@@ -11,7 +11,10 @@ const Weather = () => {
 
     const fetchIP = async () => {
         return fetch(`https://api.ipify.org?format=json`)
-            .then((response) => response.json())
+            .then((response) => {
+                // console.log("fetchip");
+                return response.json();
+            })
             .then((data) => data.ip)
             .catch((error) => {
                 console.error("Error fetching IP:", error);
@@ -29,7 +32,10 @@ const Weather = () => {
                 import.meta.env.VITE_IPSTACK_ACCESS_KEY
             }`;
             return fetch(ipstackUrl)
-                .then((response) => response.json())
+                .then((response) => {
+                    // console.log("fetchlocation");
+                    return response.json();
+                })
                 .then((data) => {
                     setLocation({
                         ip: data.ip,
@@ -58,7 +64,10 @@ const Weather = () => {
                 import.meta.env.VITE_OPENWEATHER_API_KEY
             }&units=metric`
         )
-            .then((response) => response.json())
+            .then((response) => {
+                // console.log("fetchcurrentWeather");
+                return response.json();
+            })
             .then((data) => {
                 setWeather(data);
             })
@@ -76,7 +85,10 @@ const Weather = () => {
                 import.meta.env.VITE_OPENWEATHER_API_KEY
             }&units=metric`
         )
-            .then((response) => response.json())
+            .then((response) => {
+                // console.log("fetchforecastData");
+                return response.json();
+            })
             .then((data) => {
                 setForecast(data);
             })
@@ -86,9 +98,9 @@ const Weather = () => {
             });
     };
 
-    useEffect(() => {
-        console.log(location);
-    }, [location]);
+    // useEffect(() => {
+    //     console.log(location);
+    // }, [location]);
     useEffect(() => {
         fetchLocation();
     }, []);
