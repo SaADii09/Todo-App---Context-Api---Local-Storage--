@@ -98,9 +98,6 @@ const Weather = () => {
             });
     };
 
-    // useEffect(() => {
-    //     console.log(location);
-    // }, [location]);
     useEffect(() => {
         fetchLocation();
     }, []);
