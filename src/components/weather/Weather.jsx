@@ -9,7 +9,7 @@ const Weather = () => {
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(false);
 
-    const fetchLocation = async () => {
+    const fetchLocation = () => {
         setLoading(true);
         fetch(
             "http://ip-api.com/json/?fields=country,countryCode,city,zip,lat,lon,query"
@@ -35,8 +35,6 @@ const Weather = () => {
     };
 
     const fetchCurrentWeather = async () => {
-        // if (!location.lat || !location.lon)
-        //     return Promise.reject("Location not available");
         return fetch(
             `https://api.openweathermap.org/data/2.5/weather?lat=${
                 location.lat
@@ -55,8 +53,6 @@ const Weather = () => {
     };
 
     const fetchForecastData = async () => {
-        // if (!location.lat || !location.lon)
-        //     return Promise.reject("Location not available");
         return fetch(
             `https://api.openweathermap.org/data/2.5/forecast?lat=${
                 location.lat
@@ -74,19 +70,30 @@ const Weather = () => {
             });
     };
 
+    // useEffect(() => {
+    //     setLoading(true);
+    //     fetchLocation()
+    //         .then(() => {
+    //             return Promise.all([
+    //                 fetchCurrentWeather(),
+    //                 fetchForecastData(),
+    //             ]);
+    //         })
+    //         .finally(() => {
+    //             setLoading(false);
+    //         });
+    // }, [location.lat, location.lon]);
+
     useEffect(() => {
-        setLoading(true);
-        fetchLocation()
-            .then(() => {
-                return Promise.all([
-                    fetchCurrentWeather(),
-                    fetchForecastData(),
-                ]);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, [location.lat, location.lon]);
+        fetchLocation();
+    }, []);
+
+    useEffect(() => {
+        if (location.lat && location.lon) {
+            fetchCurrentWeather();
+            fetchForecastData();
+        }
+    }, [location]);
 
     if (loading) {
         return <div>Loading weather data...</div>;
