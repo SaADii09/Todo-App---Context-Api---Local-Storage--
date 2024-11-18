@@ -12,7 +12,7 @@ const Weather = () => {
     const fetchLocation = () => {
         setLoading(true);
         fetch(
-            "http://ip-api.com/json/?fields=country,countryCode,city,zip,lat,lon,query"
+            "https://ip-api.com/json/?fields=country,countryCode,city,zip,lat,lon,query"
         )
             .then((response) => response.json())
             .then((data) => {
