@@ -34,8 +34,8 @@ const Weather = () => {
     };
 
     const fetchCurrentWeather = async () => {
-        if (!location.lat || !location.lon)
-            return Promise.reject("Location not available");
+        // if (!location.lat || !location.lon)
+        //     return Promise.reject("Location not available");
         return fetch(
             `https://api.openweathermap.org/data/2.5/weather?lat=${
                 location.lat
@@ -54,8 +54,8 @@ const Weather = () => {
     };
 
     const fetchForecastData = async () => {
-        if (!location.lat || !location.lon)
-            return Promise.reject("Location not available");
+        // if (!location.lat || !location.lon)
+        //     return Promise.reject("Location not available");
         return fetch(
             `https://api.openweathermap.org/data/2.5/forecast?lat=${
                 location.lat
