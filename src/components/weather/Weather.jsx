@@ -11,7 +11,7 @@ const Weather = () => {
 
     const fetchLocation = async () => {
         setLoading(true);
-        return fetch(
+        fetch(
             "http://ip-api.com/json/?fields=country,countryCode,city,zip,lat,lon,query"
         )
             .then((response) => response.json())
@@ -26,6 +26,7 @@ const Weather = () => {
                     lat: data.lat,
                 });
                 setLoading(false);
+                return data;
             })
             .catch((error) => {
                 setErr(true);
@@ -56,7 +57,7 @@ const Weather = () => {
     const fetchForecastData = async () => {
         // if (!location.lat || !location.lon)
         //     return Promise.reject("Location not available");
-        return fetch(
+        returnfetch(
             `https://api.openweathermap.org/data/2.5/forecast?lat=${
                 location.lat
             }&lon=${location.lon}&appid=${
