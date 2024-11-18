@@ -13,7 +13,7 @@ const Jokes = () => {
         fetch("https://api.api-ninjas.com/v1/jokes", {
             method: "GET",
             headers: {
-                "X-Api-Key": "HoGgaDM2OSwRfuFDZ3rl3g==nCIePvS5qGM19Gth",
+                "X-Api-Key": import.meta.env.VITE_NINJA_JOKES_API_KEY,
             },
         })
             .then((response) => {

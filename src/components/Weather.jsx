@@ -1,27 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Select from "react-select/base";
 
 const Weather = () => {
     const [location, setLocation] = useState({});
 
+    const [weather, setWeather] = useState(null);
+    const [forecast, setForecast] = useState(null);
+
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(false);
 
-    const [selectedcountry, setSelectedcountry] = useState("");
-    const [selectedcity, setSelectedcity] = useState("");
-
-    const [allcountry, setAllcountry] = useState([]);
-    const [allcity, setAllcity] = useState([]);
-
-    const [searchCountry, setSearchCountry] = useState("");
-    const [searchCity, setSearchCity] = useState("");
-
-    const [weather, setWeather] = useState({});
-    const [forecast, setForecast] = useState({});
-
-    const fetchLocation = () => {
+    const fetchLocation = async () => {
         setLoading(true);
-        fetch(
+        return fetch(
             "http://ip-api.com/json/?fields=country,countryCode,city,zip,lat,lon,query"
         )
             .then((response) => response.json())
@@ -35,152 +25,156 @@ const Weather = () => {
                     lon: data.lon,
                     lat: data.lat,
                 });
+                setLoading(false);
             })
             .catch((error) => {
                 setErr(true);
                 console.error("Error fetching location:", error);
+            });
+    };
+
+    const fetchCurrentWeather = async () => {
+        if (!location.lat || !location.lon)
+            return Promise.reject("Location not available");
+        return fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${
+                location.lat
+            }&lon=${location.lon}&appid=${
+                import.meta.env.VITE_OPENWEATHER_API_KEY
+            }&units=metric`
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                setWeather(data);
+            })
+            .catch((error) => {
+                setErr(true);
+                console.error("Error fetching weather data:", error);
+            });
+    };
+
+    const fetchForecastData = async () => {
+        if (!location.lat || !location.lon)
+            return Promise.reject("Location not available");
+        return fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${
+                location.lat
+            }&lon=${location.lon}&appid=${
+                import.meta.env.VITE_OPENWEATHER_API_KEY
+            }&units=metric`
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                setForecast(data);
+            })
+            .catch((error) => {
+                setErr(true);
+                console.error("Error fetching forecast data:", error);
+            });
+    };
+
+    useEffect(() => {
+        setLoading(true);
+        fetchLocation()
+            .then(() => {
+                return Promise.all([
+                    fetchCurrentWeather(),
+                    fetchForecastData(),
+                ]);
             })
             .finally(() => {
                 setLoading(false);
             });
-    };
-    useEffect(() => {
-        fetchLocation();
-    }, []);
-
-    const fetchCurrentWeather = async () => {
-        return fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric`
-        )
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch current weather");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setWeather(data);
-            })
-            .catch((err) => {
-                setErr(err.message);
-            });
-    };
-
-    // Function to fetch forecast data
-    const fetchForecastData = async () => {
-        return fetch(
-            `https://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric`
-        )
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch forecast data");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setForecast(data);
-            })
-            .catch((err) => {
-                setErr(err.message);
-            });
-    };
-
-    // useEffect to fetch both current weather and forecast data
-    useEffect(() => {
-        setLoading(true);
-        // Fetch both current weather and forecast in parallel
-        Promise.all([fetchCurrentWeather(), fetchForecastData()])
-            .then(() => {
-                setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
-    }, [location]);
+    }, [location.lat, location.lon]);
 
     if (loading) {
         return <div>Loading weather data...</div>;
     }
 
     if (err) {
-        return <div>Error: {err}</div>;
+        return <div>sorry! Error occured! </div>;
     }
 
-    const fetchAllcountry = () => {
-        setLoading(true);
-        fetch(`https://restcountries.com/v3.1/name/${searchCountry}`)
-            .then((response) => response.json())
-            .then((data) => {
-                const countriesNames = data.map((country) => {
-                    return {
-                        value: {
-                            name: country.name.common,
-                            code: country.cca2,
-                        },
-                        label: `${country.name.common}, ${country.cca2}`,
-                    };
-                });
-                setAllcountry(countriesNames);
-            })
-            .catch((error) => {
-                setErr(true);
-                console.error("Error fetching location:", error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+    const getWeatherEmoji = (description) => {
+        switch (description.toLowerCase()) {
+            case "clear sky":
+                return "☀️";
+            case "few clouds":
+                return "🌤️";
+            case "scattered clouds":
+                return "🌥️";
+            case "broken clouds":
+                return "☁️";
+            case "shower rain":
+                return "🌧️";
+            case "rain":
+                return "🌧️";
+            case "thunderstorm":
+                return "⛈️";
+            case "snow":
+                return "❄️";
+            case "mist":
+                return "🌫️";
+            case "haze":
+                return "🌫️";
+            default:
+                return "🌥️";
+        }
     };
 
     return (
-        <>
-            <h1>🌦️Weather Forcast</h1>
-            {/* <Select
-                options={allcountry}
-                value={selectedcountry ? selectedcountry : searchCountry}
-                // onChange={fetchAllcountry}
-                onMenuOpen={fetchAllcountry}
-                onInputChange={fetchAllcountry}
-                isSearchable
-            /> */}
+        <div className="weather-container">
+            <h1>🌦️ Weather Forecast</h1>
 
-            <button onClick={fetchLocation}>click</button>
-            {loading && <p>Loading...</p>}
-            {err && <p>Error</p>}
             {location && (
-                <p>
-                    {location.city}, {location.country}
-                </p>
-            )}
-            <div>
-                <h2>Current Weather</h2>
-                {weather && (
-                    <div className="current-weather">
-                        <h3>{weather.name}</h3>
-                        <p>{JSON.stringify(weather.weather)}</p>
-                        {/* <p>Temperature: {weather.main.temp}°C</p>
-                        <p>Humidity: {weather.main.humidity}%</p>
-                        <p>Wind Speed: {weather.wind.speed} m/s</p> */}
-                    </div>
-                )}
-
-                <h2>Weather Forecast</h2>
-                <div className="forecast-container">
-                    {/* {forecast &&
-                        forecast[list].map((forecasti) => (
-                            <div className="forecast-card" key={forecasti.dt}>
-                                <h4>
-                                    {new Date(
-                                        forecasti.dt * 1000
-                                    ).toLocaleString()}
-                                </h4>
-                                <p>Temperature: {forecasti.main.temp}°C</p>
-                                <p>{forecasti.weather[0].description}</p>
-                                <p>Wind Speed: {forecasti.wind.speed} m/s</p>
-                            </div>
-                        ))} */}
+                <div className="location-container">
+                    <p className="location-info">
+                        Location(from your IP): {location.city},{" "}
+                        {location.country}
+                    </p>
+                    <button className="location-btn" onClick={fetchLocation}>
+                        Refresh
+                    </button>
                 </div>
+            )}
+
+            <h2>Current Weather</h2>
+            {weather && (
+                <div className="current-weather">
+                    <h3 className="weather-description">
+                        {getWeatherEmoji(weather.weather[0].description)}
+                        {weather.weather[0].description.toUpperCase()}
+                    </h3>
+                    <p>Temperature: {weather.main.temp}°C</p>
+                    <p>Feels Like: {weather.main.feels_like}°C</p>
+                    <p>Humidity: {weather.main.humidity}%</p>
+                    <p>Wind Speed: {weather.wind.speed} m/s</p>
+                    <p>Wind Direction: {weather.wind.deg}°</p>
+                </div>
+            )}
+
+            <h2>Weather Forecast</h2>
+            <div className="forecast-container">
+                {forecast &&
+                    forecast.list.map((forecastItem) => (
+                        <div className="forecast-card" key={forecastItem.dt}>
+                            <h4>
+                                {new Date(
+                                    forecastItem.dt * 1000
+                                ).toLocaleString()}
+                            </h4>
+                            <p>
+                                {getWeatherEmoji(
+                                    forecastItem.weather[0].description
+                                )}
+                                {forecastItem.weather[0].description.toUpperCase()}
+                            </p>
+                            <p>Temperature: {forecastItem.main.temp}°C</p>
+                            <p>Wind Speed: {forecastItem.wind.speed} m/s</p>
+                        </div>
+                    ))}
             </div>
-        </>
+        </div>
     );
 };
 

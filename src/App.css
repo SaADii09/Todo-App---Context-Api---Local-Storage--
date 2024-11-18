@@ -109,3 +109,84 @@
 .deleteBtn {
     background-color: #f84545;
 }
+
+/* ////////////// */
+.weather-container {
+    color: #f4f7fb;
+    font-family: Arial, sans-serif;
+    min-width: 80%;
+    padding: 20px;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #4a90e2;
+}
+
+.location-info {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #ccc;
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+
+.current-weather,
+.forecast-container {
+    background-color: #333;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.weather-description {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ccc;
+}
+
+.forecast-card {
+    background-color: #2a2a2a;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 10px 0;
+    flex: 0 0 250px;
+}
+
+.forecast-card h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #4a90e2;
+}
+
+.forecast-card p {
+    font-size: 1rem;
+    color: #aaa;
+}
+
+.forecast-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    gap: 15px;
+}
+
+.location-btn {
+    background-color: #4a90e2;
+}
+
+.location-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
